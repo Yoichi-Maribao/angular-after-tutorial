@@ -1,8 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import {User} from 'src/user';
 import {UserListComponent} from './user-list/user-list.component';
+import {AppUsecase} from './app.usecase';
 
 @Component({
   selector: 'my-app',
@@ -11,20 +10,17 @@ import {UserListComponent} from './user-list/user-list.component';
     CommonModule,
     UserListComponent
   ],
+  providers: [AppUsecase],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass'],
 })
 export class AppComponent implements OnInit {
-  private readonly http = inject(HttpClient);
+  private readonly usecase = inject(AppUsecase);
 
-  users: User[] = [];
+  readonly state$ = this.usecase.state$;
 
   ngOnInit() {
-    this.http
-      .get<{ data: User[] }>('https://reqres.in/api/users')
-      .subscribe((resp) => {
-        this.users = resp.data;
-      });
+    this.usecase.initialize();
   }
 }
 
