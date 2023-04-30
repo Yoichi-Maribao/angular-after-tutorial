@@ -1,1 +1,4 @@
-<user-list [users]="users"></user-list>
+<ng-container *ngIf="state$ | async as state">
+  <user-list [users]="users"></user-list>
+</ng-container>
+
